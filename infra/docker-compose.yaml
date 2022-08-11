@@ -10,7 +10,7 @@ services:
       - ./.env
 
   backend:
-    image: thxphila/foodgram_backend:latest
+    image: thxphila/foodgram_backend
     restart: always
     volumes:
       - static_value:/app/static/
