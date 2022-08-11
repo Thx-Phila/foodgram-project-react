@@ -21,7 +21,7 @@ services:
       - ./.env
 
   frontend:
-    image: :latest
+    image: thxphila/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:

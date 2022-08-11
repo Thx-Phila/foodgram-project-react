@@ -33,7 +33,7 @@ jobs:
           push: true
           context: frontend/
           no-cache: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-frontend:latest
       - name: Send message if build_and_push_to_docker_hub failed
         if: ${{ failure() }}
         uses: appleboy/telegram-action@master
