@@ -26,14 +26,14 @@ jobs:
           push: true
           context: backend/
           no-cache: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
       - name: Push frontend to Docker Hub
         uses: docker/build-push-action@v2
         with:
           push: true
           context: frontend/
           no-cache: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
       - name: Send message if build_and_push_to_docker_hub failed
         if: ${{ failure() }}
         uses: appleboy/telegram-action@master
@@ -56,8 +56,7 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram-backend:latest
             # sudo docker-compose down -v
             sudo docker-compose stop
             sudo docker-compose rm backend
