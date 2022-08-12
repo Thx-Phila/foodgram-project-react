@@ -1,109 +1,48 @@
-from django.conf import settings
 from django.contrib import admin
-from django.utils.translation import gettext_lazy as _
 
-from .forms import TagForm
-from .models import (FavoriteRecipe, Ingredient, Recipe, RecipeIngredient,
-                     ShoppingList, Tag)
+from .models import (Favourite, Follow, Ingredient, IngredientForRecipe,
+                     Recipe, ShoppingCart, Tag)
+
+admin.site.register(IngredientForRecipe)
+admin.site.register(Favourite)
+admin.site.register(Follow)
+admin.site.register(ShoppingCart)
 
 
-@admin.register(Tag)
-class TagsAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'color',
-        'slug',
-    )
-    form = TagForm
+class TagAdmin(admin.ModelAdmin):
+    list_display = ('colored_name', 'slug', 'color')
     search_fields = ('name',)
-    ordering = ('color',)
-    empty_value_display = settings.EMPTY_VALUE
 
 
-@admin.register(Ingredient)
+admin.site.register(Tag, TagAdmin)
+
+
 class IngredientAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'measurement_unit',
-        'get_recipes_count',
-    )
+    list_display = ('name', 'measurement_unit',)
     search_fields = ('name',)
-    ordering = ('measurement_unit',)
-    empty_value_display = settings.EMPTY_VALUE
-
-    def get_recipes_count(self, obj):
-        return RecipeIngredient.objects.filter(ingredient=obj.id).count()
-
-    get_recipes_count.short_description = _('Использований в рецептах')
+    list_filter = ('name',)
 
 
-class RecipeIngredientsInline(admin.TabularInline):
-    model = RecipeIngredient
-    min_num = 1
+admin.site.register(Ingredient, IngredientAdmin)
+
+
+class IngredientForRecipeInline(admin.TabularInline):
+    model = IngredientForRecipe
     extra = 1
+    min_num = 1
 
 
-# class RecipeTagsInline(admin.TabularInline):
-#     model = RecipeTag
-#     min_num = 1
-#     extra = 0
-
-
-@admin.register(RecipeIngredient)
-class RecipeIngredientsAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'recipe',
-        'ingredient',
-        'amount',
-    )
-    list_filter = ('id', 'recipe', 'ingredient')
-
-
-# @admin.register(RecipeTag)
-# class RecipeTagsAdmin(admin.ModelAdmin):
-#     list_display = (
-#         'id',
-#         'recipe',
-#         'tag',
-#     )
-#     list_filter = ('id', 'recipe', 'tag')
-
-
-@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'name',
-        'author',
-        'in_favorite',
-    )
+    date_hierarchy = 'pub_date'
+    list_display = ('name', 'author', 'count_in_favorite')
+    search_fields = ('username', 'email')
     list_filter = ('name', 'author', 'tags',)
-    readonly_fields = ('in_favorite',)
-    inlines = (RecipeIngredientsInline,)
-    empty_value_display = settings.EMPTY_VALUE
+    empty_value_display = '-пусто-'
+    autocomplete_fields = ['tags']
+    inlines = (IngredientForRecipeInline,)
 
-    def in_favorite(self, obj):
-        return obj.in_favorite.all().count()
-
-    in_favorite.short_description = _('Количество добавлений в избранное')
+    def count_in_favorite(self, obj):
+        return obj.in_favorite.count()
 
 
-@admin.register(FavoriteRecipe)
-class FavoriteRecipeAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'user',
-        'recipe',
-    )
-
-
-@admin.register(ShoppingList)
-class ShoppingListAdmin(admin.ModelAdmin):
-    list_display = (
-        'id',
-        'user',
-        'recipe',
-    )
+admin.site.register(Recipe, RecipeAdmin)
