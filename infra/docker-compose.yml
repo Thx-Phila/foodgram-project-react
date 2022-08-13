@@ -36,8 +36,3 @@ volumes:
   postgres_data:
   static_value:
   media_value:
-
-networks:
-  default:
-    external:
-      name: nginx-proxy
