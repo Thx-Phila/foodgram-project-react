@@ -1,28 +1,85 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
-from users.validators import username_validator
 
 
 class User(AbstractUser):
-    username = models.CharField(
-        'Логин',
-        max_length=150,
-        unique=True,
-        null=False,
-        validators=[username_validator]
+    ADMIN = 'admin'
+    GUEST = 'guest'
+    USER = 'user'
+    USER_ROLES = [
+        (USER, 'user'),
+        (GUEST, 'guest'),
+        (ADMIN, 'admin'),
+    ]
+    email = models.EmailField(
+        'Электронная почта',
+        help_text='Электронная почта пользователя',
+        max_length=254,
+        unique=True
     )
-    email = models.EmailField('email', unique=True, null=False, max_length=254)
-    first_name = models.CharField('Имя', max_length=150)
-    last_name = models.CharField('Фамилия', max_length=150)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-
-    REQUIRED_FIELDS = ['username',
-                       'first_name',
-                       'last_name']
+    username = models.CharField(
+        max_length=150,
+        blank=False,
+        unique=True
+    )
+    first_name = models.CharField(
+        'Имя пользователя',
+        help_text='Имя пользователя',
+        max_length=150,
+        unique=False
+    )
+    last_name = models.CharField(
+        'Фамилия пользователя',
+        help_text='Фамилия пользователя',
+        max_length=150,
+        unique=False
+    )
+    password = models.CharField(
+        'Пароль',
+        help_text='Пароль',
+        max_length=150,
+        blank=False
+    )
+    role = models.CharField(
+        'Роль',
+        help_text='Роль пользователя',
+        max_length=150,
+        blank=False,
+        choices=USER_ROLES,
+        default='user',
+    )
 
     USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', 'first_name', 'last_name', 'password']
 
-    def __str__(self):
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def str(self):
         return self.username
+
+
+class Subscribe(models.Model):
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='follower',
+        verbose_name='Подписчик'
+    )
+    author = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name='following',
+        verbose_name='Автор'
+    )
+
+    class Meta:
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
+        constraints = [
+            models.UniqueConstraint(
+                fields=('user', 'author'),
+                name='unique_subscription_user_author'
+            )
+        ]
