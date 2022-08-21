@@ -8,7 +8,7 @@ services:
       - ./.env
   
   backend:
-    image: thxphila/foodgram_backend:latest
+    image: thxphila/foodgram-backend:latest
     restart: always
     volumes:
       - static_value:/app/static/
@@ -19,7 +19,7 @@ services:
       - ./.env
   
   frontend:
-    image: thxphila/foodgram_frntend:latest
+    image: thxphila/foodgram-frontend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
