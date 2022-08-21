@@ -19,7 +19,7 @@ services:
       - ./.env
   
   frontend:
-    image: thxphila/foodgram_frontend:latest
+    image: thxphila/foodgram_frntend:latest
     volumes:
       - ../frontend/:/app/result_build/
     depends_on:
