@@ -1,17 +1,17 @@
 from django.contrib import admin
-from users.models import Subscribe, User
+
+from .models import User
 
 
-@admin.register(User)
 class UserAdmin(admin.ModelAdmin):
     list_display = (
-        'id', 'username', 'email',
-        'first_name', 'last_name', 'date_joined'
+        "id",
+        "first_name",
+        "last_name",
+        "username",
+        "email",
     )
-    list_filter = ('email', 'first_name')
-    empty_value_display = '-пусто-'
+    list_filter = ("username",)
 
 
-@admin.register(Subscribe)
-class SubscribeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'author')
+admin.site.register(User, UserAdmin)

@@ -1,34 +1,88 @@
 from django.contrib import admin
 
-from recipes.models import (Favorite, Ingredient, IngredientsInRecipe, Recipe,
-                            ShoppingCart, Tag)
+from .models import (
+    Favorite,
+    Ingredient,
+    Recipe,
+    RecipeIngredientAmount,
+    ShoppingCart,
+    Subscribe,
+    Tag,
+)
 
 
-@admin.register(Tag)
-class TagAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'color', 'slug')
-
-
-@admin.register(Ingredient)
-class IngredientAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'measurement_unit')
-
-
-@admin.register(Recipe)
 class RecipeAdmin(admin.ModelAdmin):
-    list_display = list_display = ('id', 'author', 'name')
+    model = Recipe
+    readonly_fields = ("added_to_favorites",)
+    list_display = (
+        "name",
+        "author",
+    )
+    list_display_links = ("name",)
+    list_filter = ("author", "name")
 
 
-@admin.register(ShoppingCart)
+class IngredientAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "measurement_unit",
+    )
+    list_display_links = ("name",)
+    list_filter = ("name",)
+
+
+class TagAdmin(admin.ModelAdmin):
+    list_display = (
+        "name",
+        "slug",
+    )
+    list_display_links = ("name",)
+
+
+class SubscriptionAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "user",
+        "author",
+    )
+
+
 class ShoppingCartAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
+    list_display = (
+        "id",
+        "user",
+        "recipe",
+    )
+    list_filter = ("user",)
 
 
-@admin.register(IngredientsInRecipe)
-class IngredientsInRecipeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'recipe', 'ingredient', 'amount')
+class RecipeIngredientAmountAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "recipe",
+        "ingredient",
+        "amount",
+    )
+    list_display_links = (
+        "id",
+        "ingredient",
+    )
+    list_filter = ("recipe",)
 
 
-@admin.register(Favorite)
 class FavoriteAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'recipe')
+    list_display = (
+        "id",
+        "user",
+        "recipe",
+    )
+    list_filter = ("user",)
+
+
+admin.site.register(Tag, TagAdmin)
+admin.site.register(Ingredient, IngredientAdmin)
+admin.site.register(RecipeIngredientAmount, RecipeIngredientAmountAdmin)
+admin.site.register(Recipe, RecipeAdmin)
+admin.site.register(Subscribe, SubscriptionAdmin)
+admin.site.register(Favorite, FavoriteAdmin)
+admin.site.register(ShoppingCart, ShoppingCartAdmin)

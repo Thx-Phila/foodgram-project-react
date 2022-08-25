@@ -1,0 +1,28 @@
+[tool.black]
+line-length = 70
+skip-string-normalization = true
+target-version = ["py38"]
+color = true
+
+[tool.isort]
+known_first_party = "posts, api"
+known_django = "django"
+profile = "black"
+line_length = 79
+
+# [tool.isort]
+# profile = "black"
+#default_section = "THIRDPARTY"
+#known_first_party = "yatube_api"  # change it for the name of your django project
+#known_django = "django"
+#sections = ["FUTURE,STDLIB,DJANGO,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"]
+#default_section = "THIRDPARTY"
+#known_first_party = "posts, api"  # change it for the name of your django project
+#known_django = "django"
+#sections = "FUTURE,STDLIB,DJANGO,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+#py_version = 38
+#profile = "black"
+#line_length = 79
+#multi_line_output = 3
+#include_trailing_comma = true
+#default_section = "FIRSTPARTY"
