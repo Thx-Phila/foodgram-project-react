@@ -1,10 +1,30 @@
 version: '3.3'
 services:
+  db:
+    image: postgres:13.0-alpine
+    volumes:
+      - /var/lib/postgresql/data/
+    env_file:
+      - ./.env
+  
+  backend:
+    image: thxphila/frontend
+    restart: always
+    volumes:
+      - static_value:/app/static/
+      - media_value:/app/media/
+    depends_on:
+      - db
+    env_file:
+      - ./.env
+  
   frontend:
-    image: thxphila/frontend:latest
+    image: thxphila/frontend
     volumes:
       - ../frontend/:/app/result_build/
-
+    depends_on:
+      - backend
+  
   nginx:
     image: nginx:1.19.3
     ports:
@@ -15,26 +35,7 @@ services:
       - ../docs/:/usr/share/nginx/html/api/docs/
       - static_value:/var/html/static/
       - media_value:/var/html/media/
-    depends_on:
-      - web
 
-  db:
-    image: postgres:13.0-alpine
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
-    env_file:
-      - .env
-
-  web:
-    image: thxphila/backend:latest
-    volumes:
-      - static_value:/app/static/
-      - media_value:/app/media/
-    depends_on:
-      - db
-    env_file:
-      - .env
 volumes:
-  postgres_data:
   static_value:
   media_value:
