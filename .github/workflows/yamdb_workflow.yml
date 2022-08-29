@@ -40,13 +40,13 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/backend_1:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/backend_1
       - name: Push frontend
         uses: docker/build-push-action@v2
         with:
           context: ./frontend
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/frontend_1:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/frontend_1
 
   deploy:
     runs-on: ubuntu-latest
