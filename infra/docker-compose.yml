@@ -1,7 +1,7 @@
 version: '3.3'
 services:
   frontend:
-    image: thxphila/frontend:latest
+    image: thxphila/frontend_1:latest
     volumes:
       - ../frontend/:/app/result_build/
 
@@ -26,7 +26,7 @@ services:
       - .env
 
   web:
-    image: thxphila/backend:latest
+    image: thxphila/backend_1:latest
     volumes:
       - static_value:/app/static/
       - media_value:/app/media/

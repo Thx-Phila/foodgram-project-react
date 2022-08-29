@@ -40,13 +40,13 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/backend_1:latest
       - name: Push frontend
         uses: docker/build-push-action@v2
         with:
           context: ./frontend
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/frontend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/frontend_1:latest
 
   deploy:
     runs-on: ubuntu-latest
@@ -63,7 +63,7 @@ jobs:
           script: |
             sudo docker compose stop
             sudo docker compose rm -f web
-            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/backend
+            sudo docker image rm ${{ secrets.DOCKER_USERNAME }}/backend_1
             rm .env
             touch .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
